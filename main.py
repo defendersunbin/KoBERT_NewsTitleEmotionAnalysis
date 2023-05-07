@@ -174,4 +174,4 @@ print("중복 제거 후 행 개수: ", len(news_df))
 
 # 데이터 프레임 저장
 now = datetime.datetime.now()
-news_df.to_csv('{}_{}.csv'.format(search, now.strftime('%Y%m%d_%H시%M분%S초')), encoding='utf-8-sig', index=False)
+news_df.to_csv('csv/sk하이닉스.csv', encoding='utf-8-sig', index=False)
