@@ -50,7 +50,7 @@ def convert_sentiment(probs):
 df['sentiment'] = df['sentiment'].apply(convert_sentiment)
 
 # csv 파일로 저장
-df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2).csv', index=False)
+df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - test5).csv', index=False)
 
 # 결과 확인
 print(df['content'])
