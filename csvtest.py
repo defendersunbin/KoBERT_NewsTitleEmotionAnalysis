@@ -1,5 +1,5 @@
 import pandas as pd
-from konlpy.tag import Komoran
+from konlpy.tag import Hannanum  # Hannanum 형태소 분석기 불러오기
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
@@ -14,9 +14,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 # 형태소 분석 함수
-komoran = Komoran()
+hannanum = Hannanum()  # Hannanum 형태소 분석기 객체 생성
 def tokenize(text):
-    return komoran.morphs(text)
+    return hannanum.morphs(text)
 
 # 제목과 내용을 합쳐서 content 열 생성
 df['content'] = df['title']
@@ -50,7 +50,7 @@ def convert_sentiment(probs):
 df['sentiment'] = df['sentiment'].apply(convert_sentiment)
 
 # csv 파일로 저장
-df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - test5).csv', index=False)
+df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test9).csv', index=False)
 
 # 결과 확인
 print(df['content'])
