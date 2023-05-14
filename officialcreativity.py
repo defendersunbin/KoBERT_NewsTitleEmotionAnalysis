@@ -59,7 +59,7 @@ def check_positive(text):
     return False
 
 def check_neutral(text):
-    neutral_words = ['반입', '진화']
+    neutral_words = ['반입', '진화', '전망', '모집']
     for word in neutral_words:
         if word in text:
             return True
@@ -77,7 +77,7 @@ def hannanum_tokenize(text):
 df['hannanum_tokens'] = df['content'].apply(hannanum_tokenize)
 
 # csv 파일로 저장
-df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test19[중립수정]).csv', index=False)
+df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test20).csv', index=False)
 
 # 결과 확인
 print(df[['content', 'sentiment', 'label']])
