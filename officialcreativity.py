@@ -45,15 +45,22 @@ df['label'] = df['sentiment'].apply(get_label)
 
 # 적자, 손실이라는 단어가 있으면 부정으로 분류하는 함수 추가
 def check_negative(text):
-    negative_words = ['적자', '손실', '빨간불', '위기', '몸살', '바닥', '부정', '뿔났다']
+    negative_words = ['적자', '손실', '빨간불', '위기', '몸살', '바닥', '부정', '뿔났다', '사망', '하락', '스톱', '부정적']
     for word in negative_words:
         if word in text:
             return True
     return False
 
 def check_positive(text):
-    positive_words = ['혜택', '뛰어넘자', '탈출', '연장', '협약', '참여', '초록불', '위기탈출', '인센티브', '긍정']
+    positive_words = ['혜택', '뛰어넘자', '탈출', '연장', '협약', '참여', '초록불', '위기탈출', '인센티브', '긍정', '해결', '상승', '긍정적']
     for word in positive_words:
+        if word in text:
+            return True
+    return False
+
+def check_neutral(text):
+    neutral_words = ['반입', '진화']
+    for word in neutral_words:
         if word in text:
             return True
     return False
@@ -70,7 +77,7 @@ def hannanum_tokenize(text):
 df['hannanum_tokens'] = df['content'].apply(hannanum_tokenize)
 
 # csv 파일로 저장
-df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test16).csv', index=False)
+df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test19[중립수정]).csv', index=False)
 
 # 결과 확인
 print(df[['content', 'sentiment', 'label']])
