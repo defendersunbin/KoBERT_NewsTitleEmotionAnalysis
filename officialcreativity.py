@@ -7,11 +7,13 @@ from konlpy.tag import Hannanum
 df = pd.read_csv('csv/sk하이닉스.csv')
 
 # KoELECTRA 모델 로드
-model_name = "hyunwoongko/kobart"
+model_name = "monologg/kobert"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
+num_labels = 2  # 수정된 부분
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
+
 
 # 제목과 내용을 합쳐서 content 열 생성
 df['content'] = df['title']
@@ -43,23 +45,24 @@ def get_label(probs):
 
 df['label'] = df['sentiment'].apply(get_label)
 
-# 적자, 손실이라는 단어가 있으면 부정으로 분류하는 함수 추가
+
+# 적자, 손실이라는 단어가 있으면 부정으로 분류하는 함수 추가 및 긍정, 중립 함수 추가
 def check_negative(text):
-    negative_words = ['적자', '손실', '빨간불', '위기', '몸살', '바닥', '부정', '뿔났다', '사망', '하락', '스톱', '부정적']
+    negative_words = ['적자', '손실', '빨간불', '위기', '몸살', '바닥', '부정', '뿔났다', '사망', '하락', '스톱', '부정적', '추락', '걱정', '부담', '침체', '부진']
     for word in negative_words:
         if word in text:
             return True
     return False
 
 def check_positive(text):
-    positive_words = ['혜택', '뛰어넘자', '탈출', '연장', '협약', '참여', '초록불', '위기탈출', '인센티브', '긍정', '해결', '상승', '긍정적']
+    positive_words = ['혜택', '뛰어넘자', '탈출', '연장', '협약', '참여', '초록불', '위기탈출', '인센티브', '긍정', '해결', '상승', '긍정적', '지킨다', '지원사격', '순이익', '기대감', '인기', '활짝', '보조금']
     for word in positive_words:
         if word in text:
             return True
     return False
 
 def check_neutral(text):
-    neutral_words = ['반입', '진화', '전망', '모집']
+    neutral_words = ['반입', '진화', '전망', '모집', '목표', '도입', '공시', '연장', '방문', '활용', '강화', '협약', '의도', '합의', '연구', '점유율', '행사', '만났다', '세운다', '짓는다', '전파', '기술연구']
     for word in neutral_words:
         if word in text:
             return True
@@ -76,8 +79,9 @@ def hannanum_tokenize(text):
 
 df['hannanum_tokens'] = df['content'].apply(hannanum_tokenize)
 
+
 # csv 파일로 저장
-df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test20).csv', index=False)
+df.to_csv('csv/sk하이닉스_주가뉴스(KoBart season2 - Test21).csv', index=False)
 
 # 결과 확인
 print(df[['content', 'sentiment', 'label']])

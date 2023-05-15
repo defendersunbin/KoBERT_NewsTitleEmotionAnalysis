@@ -6,7 +6,6 @@ import datetime
 from tqdm import tqdm
 
 
-
 # 페이지 url 형식에 맞게 바꾸어 주는 함수 만들기
 # 입력된 수를 1, 11, 21, 31 ...만들어 주는 함수
 def makePgNum(num):
@@ -19,26 +18,23 @@ def makePgNum(num):
 
 
 # 크롤링할 url 생성하는 함수 만들기(검색어, 크롤링 시작 페이지, 크롤링 종료 페이지)
-
 def makeUrl(search, start_pg, end_pg):
-    if start_pg == end_pg:
-        start_page = makePgNum(start_pg)
-        url = "https://search.naver.com/search.naver?where=news&sm=tab_pge&query=" + search + "&start=" + str(
-            start_page)
-        print("생성url: ", url)
-        return url
-    else:
-        urls = []
-        for i in range(start_pg, end_pg + 1):
-            page = makePgNum(i)
-            url = "https://search.naver.com/search.naver?where=news&sm=tab_pge&query=" + search + "&start=" + str(page)
-            urls.append(url)
-        print("생성url: ", urls)
-        return urls
+    urls = []
+    # 현재 시간 기준 7일 이전 날짜 계산
+    now = datetime.datetime.now()
+    target_date = now - datetime.timedelta(days=7)
+    target_date_str = target_date.strftime("%Y.%m.%d")
 
-    # html에서 원하는 속성 추출하는 함수 만들기 (기사, 추출하려는 속성값)
+    for i in range(start_pg, end_pg + 1):
+        page = makePgNum(i)
+        url = f"https://search.naver.com/search.naver?where=news&sm=tab_pge&query={search}&sort=0&photo=0&field=0&pd=3&ds={target_date_str}&de={now.strftime('%Y.%m.%d')}&start={page}"
+        urls.append(url)
+
+    print("생성url: ", urls)
+    return urls
 
 
+# html에서 원하는 속성 추출하는 함수 만들기 (기사, 추출하려는 속성값)
 def news_attrs_crawler(articles, attrs):
     attrs_content = []
     for i in articles:
@@ -174,4 +170,5 @@ print("중복 제거 후 행 개수: ", len(news_df))
 
 # 데이터 프레임 저장
 now = datetime.datetime.now()
-news_df.to_csv('csv/sk하이닉스.csv', encoding='utf-8-sig', index=False)
+news_df = news_df.sort_values(by='date', ascending=False)
+news_df.to_csv('csv/카카오.csv', encoding='utf-8-sig', index=False)
